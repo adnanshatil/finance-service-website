@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="en" class="light scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinVest | Professional Financial Services</title>
+    
+    <!-- Google Fonts: Inter for Apple-like clean typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        apple: {
+                            light: '#f5f5f7',
+                            dark: '#1d1d1f',
+                            blue: '#0066cc',
+                            blueHover: '#0077ed'
+                        }
+                    },
+                    animation: {
+                        'marquee': 'marquee 30s linear infinite',
+                        'fade-in': 'fadeIn 0.5s ease-out forwards',
+                    },
+                    keyframes: {
+                        marquee: {
+                            '0%': { transform: 'translateX(0%)' },
+                            '100%': { transform: 'translateX(-50%)' } /* Move half width for seamless loop */
+                        },
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'translateY(10px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom Styles for inputs and scrollbar to maintain the clean look */
+        body {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        .glass-nav {
+            background-color: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+        
+        .dark .glass-nav {
+            background-color: rgba(29, 29, 31, 0.75);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .hero-slide {
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+        
+        .hero-slide.active {
+            opacity: 1;
+        }
+
+        /* Toggle Switches */
+        .toggle-switch {
+            position: relative;
+            width: 64px;
+            height: 32px;
+            border-radius: 9999px;
+            background-color: #e5e5ea;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 6px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .dark .toggle-switch {
+            background-color: #333;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .toggle-thumb {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 28px;
+            height: 28px;
+            background-color: white;
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .toggle-switch.active .toggle-thumb {
+            transform: translateX(32px);
+        }
+
+        /* Hide scrollbar for carousel */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Input styling */
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 0;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #d2d2d7;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        .form-input:focus {
+            outline: none;
+            border-bottom-color: #0066cc;
+        }
+        .dark .form-input {
+            border-bottom-color: #424245;
+            color: white;
+        }
+        .dark .form-input:focus {
+            border-bottom-color: #2997ff;
+        }
+    </style>
+</head>
+<body class="bg-white dark:bg-apple-dark text-gray-900 dark:text-gray-100 transition-colors duration-300">
+
+    <!-- Fixed Header -->
+    <nav class="fixed top-0 left-0 right-0 z-50 glass-nav transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Logo & Slogan -->
+                <div class="flex flex-col justify-center flex-shrink-0 cursor-pointer" onclick="window.scrollTo(0,0)">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-chart-line text-2xl text-apple-blue dark:text-blue-400"></i>
+                        <span class="font-bold text-xl tracking-tight" data-i18n="company-name">FinVest</span>
+                    </div>
+                    <span class="text-[0.65rem] uppercase tracking-wider text-gray-500 dark:text-gray-400 font-medium" data-i18n="company-slogan">Secure Your Tomorrow</span>
+                </div>
+
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#services" class="text-sm font-medium hover:text-apple-blue transition" data-i18n="nav-services">Services</a>
+                    <a href="#company" class="text-sm font-medium hover:text-apple-blue transition" data-i18n="nav-company">Company</a>
+                    <a href="#contact" class="text-sm font-medium hover:text-apple-blue transition" data-i18n="nav-contact">Contact</a>
+                </div>
+
+                <!-- Right Side Tools -->
+                <div class="hidden md:flex items-center space-x-6">
+                    <!-- Theme Toggle -->
+                    <div class="flex flex-col items-center group relative" title="Toggle Light/Dark Mode">
+                        <div class="toggle-switch" id="theme-toggle" onclick="toggleTheme()">
+                            <i class="fa-solid fa-sun text-xs text-yellow-500 z-10 ml-1 opacity-50"></i>
+                            <i class="fa-solid fa-moon text-xs text-indigo-300 z-10 mr-1 opacity-50"></i>
+                            <div class="toggle-thumb" id="theme-thumb">
+                                <i class="fa-solid fa-sun text-yellow-500 text-xs" id="theme-icon-active"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Language Toggle -->
+                    <div class="flex flex-col items-center group relative" title="Toggle English/Finnish">
+                        <div class="toggle-switch" id="lang-toggle" onclick="toggleLanguage()">
+                            <span class="text-xs z-10 ml-1 opacity-50">🇬🇧</span>
+                            <span class="text-xs z-10 mr-1 opacity-50">🇫🇮</span>
+                            <div class="toggle-thumb" id="lang-thumb">
+                                <span class="text-sm" id="lang-icon-active">🇬🇧</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CTA Button -->
+                    <a href="#contact" class="bg-apple-blue hover:bg-apple-blueHover text-white px-5 py-2 rounded-full text-sm font-medium transition shadow-md hover:shadow-lg" data-i18n="nav-quote">
+                        Contact for Quote
+                    </a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-btn" class="text-gray-600 dark:text-gray-300 focus:outline-none p-2">
+                        <i class="fa-solid fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white/95 dark:bg-apple-dark/95 backdrop-blur-xl border-t border-gray-100 dark:border-gray-800">
+            <div class="px-4 pt-2 pb-6 space-y-4">
+                <a href="#services" class="block text-base font-medium py-2" data-i18n="nav-services" onclick="closeMobileMenu()">Services</a>
+                <a href="#company" class="block text-base font-medium py-2" data-i18n="nav-company" onclick="closeMobileMenu()">Company</a>
+                <a href="#contact" class="block text-base font-medium py-2" data-i18n="nav-contact" onclick="closeMobileMenu()">Contact</a>
+                
+                <div class="flex justify-between items-center py-4 border-t border-gray-100 dark:border-gray-800">
+                    <span class="text-sm font-medium" data-i18n="theme-text">Appearance</span>
+                    <div class="toggle-switch" id="theme-toggle-mobile" onclick="toggleTheme()">
+                        <div class="toggle-thumb" id="theme-thumb-mobile">
+                            <i class="fa-solid fa-sun text-yellow-500 text-xs" id="theme-icon-active-mobile"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-between items-center py-4 border-t border-gray-100 dark:border-gray-800">
+                    <span class="text-sm font-medium" data-i18n="lang-text">Language</span>
+                    <div class="toggle-switch" id="lang-toggle-mobile" onclick="toggleLanguage()">
+                        <div class="toggle-thumb" id="lang-thumb-mobile">
+                            <span class="text-sm" id="lang-icon-active-mobile">🇬🇧</span>
+                        </div>
+                    </div>
+                </div>
+
+                <a href="#contact" class="block text-center w-full bg-apple-blue text-white px-5 py-3 rounded-full text-base font-medium" data-i18n="nav-quote" onclick="closeMobileMenu()">
+                    Contact for Quote
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header id="hero" class="relative h-screen w-full overflow-hidden bg-black">
+        <!-- Slide 1 -->
+        <div class="hero-slide active absolute inset-0 z-10" id="slide-0">
+            <div class="absolute inset-0 bg-black/40 z-10"></div>
+            <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover object-center" alt="Architecture">
+            <div class="relative z-20 h-full flex flex-col justify-center items-center text-center px-4">
+                <h1 class="text-5xl md:text-7xl font-bold text-white mb-6 drop-shadow-lg tracking-tight" data-i18n="hero-1-title">Corporate Finance</h1>
+                <p class="text-lg md:text-2xl text-gray-200 max-w-2xl font-light drop-shadow-md" data-i18n="hero-1-sub">Elevating your financial strategy to new heights.</p>
+            </div>
+        </div>
+
+        <!-- Slide 2 -->
+        <div class="hero-slide absolute inset-0 z-10" id="slide-1">
+            <div class="absolute inset-0 bg-black/40 z-10"></div>
+            <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=2070&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover object-center" alt="Meeting">
+            <div class="relative z-20 h-full flex flex-col justify-center items-center text-center px-4">
+                <h1 class="text-5xl md:text-7xl font-bold text-white mb-6 drop-shadow-lg tracking-tight" data-i18n="hero-2-title">Strategic Consulting</h1>
+                <p class="text-lg md:text-2xl text-gray-200 max-w-2xl font-light drop-shadow-md" data-i18n="hero-2-sub">Expert guidance for complex market environments.</p>
+            </div>
+        </div>
+
+        <!-- Slide 3 -->
+        <div class="hero-slide absolute inset-0 z-10" id="slide-2">
+            <div class="absolute inset-0 bg-black/40 z-10"></div>
+            <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2015&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover object-center" alt="Data">
+            <div class="relative z-20 h-full flex flex-col justify-center items-center text-center px-4">
+                <h1 class="text-5xl md:text-7xl font-bold text-white mb-6 drop-shadow-lg tracking-tight" data-i18n="hero-3-title">Global Growth</h1>
+                <p class="text-lg md:text-2xl text-gray-200 max-w-2xl font-light drop-shadow-md" data-i18n="hero-3-sub">Expanding your operations with confidence.</p>
+            </div>
+        </div>
+
+        <!-- Carousel Indicators -->
+        <div class="absolute bottom-10 left-0 right-0 z-30 flex justify-center space-x-3">
+            <button class="w-12 h-1 rounded-full bg-white/50 hover:bg-white transition indicator active" onclick="goToSlide(0)"></button>
+            <button class="w-12 h-1 rounded-full bg-white/50 hover:bg-white transition indicator" onclick="goToSlide(1)"></button>
+            <button class="w-12 h-1 rounded-full bg-white/50 hover:bg-white transition indicator" onclick="goToSlide(2)"></button>
+        </div>
+    </header>
+
+    <!-- Our Target (Contrast Section) -->
+    <section id="target" class="py-16 bg-gray-900 text-white dark:bg-black">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            <h2 class="text-2xl md:text-4xl font-medium tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-gray-100 to-gray-500" data-i18n="target-slogan">
+                Deliver finest and professional services in Finland
+            </h2>
+        </div>
+    </section>
+
+    <!-- Our Services -->
+    <section id="services" class="py-24 bg-apple-light dark:bg-[#161618]">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold tracking-tight mb-4" data-i18n="services-title">Our Services</h2>
+                <p class="text-lg text-gray-500 dark:text-gray-400 max-w-2xl mx-auto" data-i18n="services-sub">Comprehensive financial solutions tailored for corporate excellence.</p>
+            </div>
+
+            <!-- 2x3 Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Service 1 -->
+                <div class="group bg-white dark:bg-[#1d1d1f] rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-300 cursor-pointer" onclick="openModal('cfo')">
+                    <div class="h-48 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=800&auto=format&fit=crop" class="w-full h-full object-cover transform group-hover:scale-105 transition duration-500" alt="CFO">
+                    </div>
+                    <div class="p-8">
+                        <h3 class="text-xl font-semibold mb-2" data-i18n="srv-cfo-title">CFO Services</h3>
+                        <p class="text-gray-500 dark:text-gray-400 text-sm line-clamp-2" data-i18n="srv-cfo-short">Strategic financial leadership to optimize your company's capital structure and profitability.</p>
+                        <div class="mt-4 flex items-center text-apple-blue text-sm font-medium">
+                            <span data-i18n="learn-more">Learn more</span> <i class="fa-solid fa-chevron-right ml-1 text-xs"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Service 2 -->
+                <div class="group bg-white dark:bg-[#1d1d1f] rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-300 cursor-pointer" onclick="openModal('tax')">
+                    <div class="h-48 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1586486855514-8c633cc15392?q=80&w=800&auto=format&fit=crop" class="w-full h-full object-cover transform group-hover:scale-105 transition duration-500" alt="Tax">
+                    </div>
+                    <div class="p-8">
+                        <h3 class="text-xl font-semibold mb-2" data-i18n="srv-tax-title">Tax Consultant</h3>
+                        <p class="text-gray-500 dark:text-gray-400 text-sm line-clamp-2" data-i18n="srv-tax-short">Navigate complex tax regulations and minimize liabilities legally and efficiently.</p>
+                        <div class="mt-4 flex items-center text-apple-blue text-sm font-medium">
+                            <span data-i18n="learn-more">Learn more</span> <i class="fa-solid fa-chevron-right ml-1 text-xs"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Service 3 -->
+                <div class="group bg-white dark:bg-[#1d1d1f] rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-300 cursor-pointer" onclick="openModal('foreign')">
+                    <div class="h-48 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1521791136064-7986c2920216?q=80&w=800&auto=format&fit=crop" class="w-full h-full object-cover transform group-hover:scale-105 transition duration-500" alt="Foreign Rep">
+                    </div>
+                    <div class="p-8">
+                        <h3 class="text-xl font-semibold mb-2" data-i18n="srv-for-title">Foreign Office Rep.</h3>
+                        <p class="text-gray-500 dark:text-gray-400 text-sm line-clamp-2" data-i18n="srv-for-short">Local representation and compliance management for international entities in Finland.</p>
+                        <div class="mt-4 flex items-center text-apple-blue text-sm font-medium">
+                            <span data-i18n="learn-more">Learn more</span> <i class="fa-solid fa-chevron-right ml-1 text-xs"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Service 4 -->
+                <div class="group bg-white dark:bg-[#1d1d1f] rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-300 cursor-pointer" onclick="openModal('legal')">
+                    <div class="h-48 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1589829085413-56de8ae18c73?q=80&w=800&auto=format&fit=crop" class="w-full h-full object-cover transform group-hover:scale-105 transition duration-500" alt="Legal">
+                    </div>
+                    <div class="p-8">
+                        <h3 class="text-xl font-semibold mb-2" data-i18n="srv-leg-title">Financial Legal Advisor</h3>
+                        <p class="text-gray-500 dark:text-gray-400 text-sm line-clamp-2" data-i18n="srv-leg-short">Expert legal counsel on corporate finance, mergers, and financial disputes.</p>
+                        <div class="mt-4 flex items-center text-apple-blue text-sm font-medium">
+                            <span data-i18n="learn-more">Learn more</span> <i class="fa-solid fa-chevron-right ml-1 text-xs"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Service 5 -->
+                <div class="group bg-white dark:bg-[#1d1d1f] rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-300 cursor-pointer" onclick="openModal('accounting')">
+                    <div class="h-48 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=800&auto=format&fit=crop" class="w-full h-full object-cover transform group-hover:scale-105 transition duration-500" alt="Accounting">
+                    </div>
+                    <div class="p-8">
+                        <h3 class="text-xl font-semibold mb-2" data-i18n="srv-acc-title">Accounting Services</h3>
+                        <p class="text-gray-500 dark:text-gray-400 text-sm line-clamp-2" data-i18n="srv-acc-short">Precise bookkeeping, payroll, and financial reporting tailored to your business needs.</p>
+                        <div class="mt-4 flex items-center text-apple-blue text-sm font-medium">
+                            <span data-i18n="learn-more">Learn more</span> <i class="fa-solid fa-chevron-right ml-1 text-xs"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Service 6 -->
+                <div class="group bg-white dark:bg-[#1d1d1f] rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-300 cursor-pointer" onclick="openModal('export')">
+                    <div class="h-48 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1578575437130-527eed3abbec?q=80&w=800&auto=format&fit=crop" class="w-full h-full object-cover transform group-hover:scale-105 transition duration-500" alt="Export Import">
+                    </div>
+                    <div class="p-8">
+                        <h3 class="text-xl font-semibold mb-2" data-i18n="srv-exp-title">Export and Import</h3>
+                        <p class="text-gray-500 dark:text-gray-400 text-sm line-clamp-2" data-i18n="srv-exp-short">Financial structuring and risk mitigation for international trade operations.</p>
+                        <div class="mt-4 flex items-center text-apple-blue text-sm font-medium">
+                            <span data-i18n="learn-more">Learn more</span> <i class="fa-solid fa-chevron-right ml-1 text-xs"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Company Section -->
+    <section id="company" class="py-24 bg-white dark:bg-apple-dark">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col lg:flex-row items-center gap-16">
+                <div class="lg:w-1/2">
+                    <div class="rounded-[2.5rem] overflow-hidden shadow-2xl relative">
+                        <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=1200&auto=format&fit=crop" alt="Corporate Office" class="w-full h-auto object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+                    </div>
+                </div>
+                <div class="lg:w-1/2">
+                    <h2 class="text-4xl font-bold tracking-tight mb-6" data-i18n="company-title">About FinVest</h2>
+                    <p class="text-lg text-gray-500 dark:text-gray-400 leading-relaxed mb-6" data-i18n="company-desc-1">
+                        At FinVest, we redefine financial structuring. We believe in providing clear, actionable, and sustainable financial pathways for corporations operating within and outside Finland.
+                    </p>
+                    <p class="text-lg text-gray-500 dark:text-gray-400 leading-relaxed mb-8" data-i18n="company-desc-2">
+                        Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem.
+                    </p>
+                    <div class="flex space-x-8">
+                        <div>
+                            <p class="text-3xl font-bold text-apple-blue mb-1">15+</p>
+                            <p class="text-sm text-gray-500 font-medium" data-i18n="comp-stat-1">Years Experience</p>
+                        </div>
+                        <div>
+                            <p class="text-3xl font-bold text-apple-blue mb-1">200+</p>
+                            <p class="text-sm text-gray-500 font-medium" data-i18n="comp-stat-2">Corporate Clients</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Our Customers -->
+    <section id="customers" class="py-16 bg-gray-50 dark:bg-[#161618] border-y border-gray-100 dark:border-gray-800 overflow-hidden relative">
+        <div class="max-w-7xl mx-auto px-4 mb-8 text-center">
+            <h3 class="text-sm font-semibold tracking-widest uppercase text-gray-400" data-i18n="customers-title">Trusted by Industry Leaders</h3>
+        </div>
+        
+        <!-- Marquee Container -->
+        <div class="w-full relative flex items-center h-20">
+            <!-- White/Dark fade gradients on edges for smooth blend -->
+            <div class="absolute left-0 top-0 w-24 h-full bg-gradient-to-r from-gray-50 dark:from-[#161618] to-transparent z-10"></div>
+            <div class="absolute right-0 top-0 w-24 h-full bg-gradient-to-l from-gray-50 dark:from-[#161618] to-transparent z-10"></div>
+            
+            <div class="flex whitespace-nowrap animate-marquee w-[200%]">
+                <!-- Group 1 -->
+                <div class="flex justify-around items-center w-full">
+                    <div class="text-3xl text-gray-400 dark:text-gray-600 hover:text-gray-900 dark:hover:text-white transition cursor-pointer mx-8"><i class="fa-brands fa-apple"></i> <span class="text-xl font-bold ml-2">TechCorp</span></div>
+                    <div class="text-3xl text-gray-400 dark:text-gray-600 hover:text-gray-900 dark:hover:text-white transition cursor-pointer mx-8"><i class="fa-solid fa-building-columns"></i> <span class="text-xl font-bold ml-2">NordicBank</span></div>
+                    <div class="text-3xl text-gray-400 dark:text-gray-600 hover:text-gray-900 dark:hover:text-white transition cursor-pointer mx-8"><i class="fa-brands fa-aws"></i> <span class="text-xl font-bold ml-2">CloudSys</span></div>
+                    <div class="text-3xl text-gray-400 dark:text-gray-600 hover:text-gray-900 dark:hover:text-white transition cursor-pointer mx-8"><i class="fa-solid fa-globe"></i> <span class="text-xl font-bold ml-2">GlobalTrade</span></div>
+                    <div class="text-3xl text-gray-400 dark:text-gray-600 hover:text-gray-900 dark:hover:text-white transition cursor-pointer mx-8"><i class="fa-solid fa-industry"></i> <span class="text-xl font-bold ml-2">HelsinkiMfg</span></div>
+                    <div class="text-3xl text-gray-400 dark:text-gray-600 hover:text-gray-900 dark:hover:text-white transition cursor-pointer mx-8"><i class="fa-solid fa-leaf"></i> <span class="text-xl font-bold ml-2">EcoInvest</span></div>
+                </div>
+                <!-- Group 2 (Duplicate for seamless loop) -->
+                <div class="flex justify-around items-center w-full">
+                    <div class="text-3xl text-gray-400 dark:text-gray-600 hover:text-gray-900 dark:hover:text-white transition cursor-pointer mx-8"><i class="fa-brands fa-apple"></i> <span class="text-xl font-bold ml-2">TechCorp</span></div>
+                    <div class="text-3xl text-gray-400 dark:text-gray-600 hover:text-gray-900 dark:hover:text-white transition cursor-pointer mx-8"><i class="fa-solid fa-building-columns"></i> <span class="text-xl font-bold ml-2">NordicBank</span></div>
+                    <div class="text-3xl text-gray-400 dark:text-gray-600 hover:text-gray-900 dark:hover:text-white transition cursor-pointer mx-8"><i class="fa-brands fa-aws"></i> <span class="text-xl font-bold ml-2">CloudSys</span></div>
+                    <div class="text-3xl text-gray-400 dark:text-gray-600 hover:text-gray-900 dark:hover:text-white transition cursor-pointer mx-8"><i class="fa-solid fa-globe"></i> <span class="text-xl font-bold ml-2">GlobalTrade</span></div>
+                    <div class="text-3xl text-gray-400 dark:text-gray-600 hover:text-gray-900 dark:hover:text-white transition cursor-pointer mx-8"><i class="fa-solid fa-industry"></i> <span class="text-xl font-bold ml-2">HelsinkiMfg</span></div>
+                    <div class="text-3xl text-gray-400 dark:text-gray-600 hover:text-gray-900 dark:hover:text-white transition cursor-pointer mx-8"><i class="fa-solid fa-leaf"></i> <span class="text-xl font-bold ml-2">EcoInvest</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-24 bg-white dark:bg-apple-dark">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold tracking-tight mb-4" data-i18n="contact-title">Get in Touch</h2>
+                <p class="text-lg text-gray-500 dark:text-gray-400 max-w-2xl mx-auto" data-i18n="contact-sub">Let's discuss how we can elevate your financial strategy.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
+                <!-- Left: Info & Map -->
+                <div class="flex flex-col space-y-8">
+                    <div class="w-full h-64 bg-gray-200 rounded-3xl overflow-hidden shadow-inner">
+                        <iframe 
+                            src="https://maps.google.com/maps?q=Lepp%C3%A4vaarankatu%203-9,%2002600%20Espoo&t=&z=13&ie=UTF8&iwloc=&output=embed" 
+                            width="100%" 
+                            height="100%" 
+                            style="border:0;" 
+                            allowfullscreen="" 
+                            loading="lazy" 
+                            referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
+                    </div>
+
+                    <div class="bg-apple-light dark:bg-[#161618] p-8 rounded-3xl">
+                        <div class="space-y-6">
+                            <div class="flex items-start gap-4">
+                                <i class="fa-solid fa-location-dot mt-1 text-apple-blue text-xl"></i>
+                                <div>
+                                    <p class="font-medium text-lg mb-1" data-i18n="contact-hq">Headquarters</p>
+                                    <p class="text-gray-500 dark:text-gray-400 text-sm">Leppävaarankatu 3-9<br>02600 Espoo, Finland</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-4">
+                                <i class="fa-solid fa-phone text-apple-blue text-xl"></i>
+                                <p class="text-gray-500 dark:text-gray-400 text-sm">+358 12 345 6789</p>
+                            </div>
+                            <div class="flex items-center gap-4">
+                                <i class="fa-solid fa-envelope text-apple-blue text-xl"></i>
+                                <p class="text-gray-500 dark:text-gray-400 text-sm">info@finvest-company.com</p>
+                            </div>
+                        </div>
+
+                        <!-- Interesting Element -->
+                        <div class="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm font-medium" data-i18n="contact-response">Avg. Response Time</span>
+                                <span class="bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 text-xs px-3 py-1 rounded-full font-bold">
+                                    <i class="fa-regular fa-clock mr-1"></i> <span data-i18n="contact-hours">Under 2 hours</span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Form -->
+                <div class="bg-white dark:bg-[#1d1d1f] p-8 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-800">
+                    <form onsubmit="handleForm(event)" class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <input type="text" id="form-name" required class="form-input" placeholder="Full Name *">
+                            </div>
+                            <div>
+                                <input type="tel" id="form-phone" required class="form-input" placeholder="Phone Number *">
+                            </div>
+                        </div>
+                        <div>
+                            <input type="email" id="form-email" required class="form-input" placeholder="Email Address *">
+                        </div>
+                        <div>
+                            <input type="text" id="form-company" required class="form-input" placeholder="Company Name *">
+                        </div>
+                        <div>
+                            <textarea id="form-desc" rows="4" class="form-input resize-none" placeholder="How can we help you?"></textarea>
+                        </div>
+                        <button type="submit" class="w-full bg-apple-dark dark:bg-white text-white dark:text-black py-4 rounded-full font-medium text-lg hover:bg-black dark:hover:bg-gray-200 transition shadow-md hover:shadow-lg">
+                            <span data-i18n="contact-send">Send Message</span>
+                        </button>
+                    </form>
+                    
+                    <!-- Success Message (Hidden) -->
+                    <div id="form-success" class="hidden mt-4 p-4 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 rounded-2xl text-center text-sm font-medium">
+                        <i class="fa-solid fa-check-circle mr-2"></i> <span data-i18n="contact-success">Message sent successfully! We will contact you soon.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-50 dark:bg-[#161618] pt-16 pb-8 border-t border-gray-200 dark:border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
+                <!-- Left: Company Info -->
+                <div>
+                    <div class="flex items-center gap-2 mb-4">
+                        <i class="fa-solid fa-chart-line text-2xl text-apple-blue dark:text-blue-400"></i>
+                        <span class="font-bold text-xl tracking-tight" data-i18n="company-name">FinVest</span>
+                    </div>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mb-6 max-w-xs" data-i18n="footer-desc">
+                        Providing premier financial services, advisory, and consulting for businesses looking to scale securely.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-gray-900 dark:hover:text-white transition"><i class="fa-brands fa-linkedin text-xl"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-gray-900 dark:hover:text-white transition"><i class="fa-brands fa-twitter text-xl"></i></a>
+                    </div>
+                </div>
+
+                <!-- Middle: Links -->
+                <div>
+                    <h4 class="font-semibold text-lg mb-4" data-i18n="footer-links-title">Quick Links</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#services" class="text-sm text-gray-500 hover:text-apple-blue dark:text-gray-400 transition" data-i18n="nav-services">Services</a></li>
+                        <li><a href="#company" class="text-sm text-gray-500 hover:text-apple-blue dark:text-gray-400 transition" data-i18n="nav-company">Company</a></li>
+                        <li><a href="#contact" class="text-sm text-gray-500 hover:text-apple-blue dark:text-gray-400 transition" data-i18n="nav-contact">Contact</a></li>
+                    </ul>
+                </div>
+
+                <!-- Right: Contact -->
+                <div>
+                    <h4 class="font-semibold text-lg mb-4" data-i18n="footer-contact-title">Contact</h4>
+                    <ul class="space-y-3 mb-6">
+                        <li class="text-sm text-gray-500 dark:text-gray-400"><i class="fa-solid fa-envelope mr-2"></i> info@finvest-company.com</li>
+                        <li class="text-sm text-gray-500 dark:text-gray-400"><i class="fa-solid fa-phone mr-2"></i> +358 12 345 6789</li>
+                    </ul>
+                    <a href="#contact" class="inline-block border border-gray-300 dark:border-gray-600 hover:border-gray-900 dark:hover:border-white text-gray-900 dark:text-white px-5 py-2 rounded-full text-sm font-medium transition" data-i18n="footer-quote">
+                        Request a Quote
+                    </a>
+                </div>
+            </div>
+            
+            <!-- End Ribbon -->
+            <div class="border-t border-gray-200 dark:border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-gray-400">
+                <p data-i18n="footer-rights">&copy; 2026 FinVest. All rights reserved.</p>
+                <div class="mt-4 md:mt-0 space-x-4">
+                    <a href="#" class="hover:text-gray-900 dark:hover:text-white" data-i18n="footer-privacy">Privacy Policy</a>
+                    <a href="#" class="hover:text-gray-900 dark:hover:text-white" data-i18n="footer-terms">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Service Modal -->
+    <div id="service-modal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="closeModal()"></div>
+        <div class="bg-white dark:bg-apple-dark w-full max-w-2xl rounded-3xl shadow-2xl relative z-10 overflow-hidden transform scale-95 opacity-0 transition-all duration-300" id="modal-content">
+            <button onclick="closeModal()" class="absolute top-4 right-4 w-8 h-8 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center text-gray-500 hover:text-black dark:hover:text-white transition z-20">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="h-64 relative">
+                <img id="modal-img" src="" alt="Service Image" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-white dark:from-apple-dark to-transparent"></div>
+            </div>
+            <div class="px-8 pb-8 pt-4">
+                <h3 id="modal-title" class="text-3xl font-bold mb-4 text-gray-900 dark:text-white">Title</h3>
+                <p id="modal-desc" class="text-gray-600 dark:text-gray-300 leading-relaxed text-base mb-8">Description goes here.</p>
+                <a href="#contact" onclick="closeModal()" class="inline-block bg-apple-blue hover:bg-apple-blueHover text-white px-6 py-3 rounded-full text-sm font-medium transition" data-i18n="modal-cta">
+                    Inquire About This Service
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* State & Dictionaries */
+        let currentLang = 'en';
+        let currentTheme = 'light';
+        let currentSlide = 0;
+        let slideInterval;
+
+        const dictionary = {
+            en: {
+                "company-name": "FinVest",
+                "company-slogan": "Secure Your Tomorrow",
+                "nav-services": "Services",
+                "nav-company": "Company",
+                "nav-contact": "Contact",
+                "nav-quote": "Contact for Quote",
+                "theme-text": "Appearance",
+                "lang-text": "Language",
+                
+                "hero-1-title": "Corporate Finance",
+                "hero-1-sub": "Elevating your financial strategy to new heights.",
+                "hero-2-title": "Strategic Consulting",
+                "hero-2-sub": "Expert guidance for complex market environments.",
+                "hero-3-title": "Global Growth",
+                "hero-3-sub": "Expanding your operations with confidence.",
+                
+                "target-slogan": "Deliver finest and professional services in Finland.",
+                
+                "services-title": "Our Services",
+                "services-sub": "Comprehensive financial solutions tailored for corporate excellence.",
+                "learn-more": "Learn more",
+                
+                "srv-cfo-title": "CFO Services",
+                "srv-cfo-short": "Strategic financial leadership to optimize your company's capital structure and profitability.",
+                "srv-cfo-full": "Our fractional and interim CFO services provide you with executive-level financial leadership without the full-time commitment. We assist in structuring debt, managing equity, driving profitability, and aligning financial strategies with your overall business objectives to ensure sustainable growth.",
+                
+                "srv-tax-title": "Tax Consultant",
+                "srv-tax-short": "Navigate complex tax regulations and minimize liabilities legally and efficiently.",
+                "srv-tax-full": "Taxation in Finland and internationally requires precision. Our experts offer comprehensive tax planning, corporate tax compliance, VAT consulting, and representation during tax audits. We ensure your business remains compliant while optimizing your tax position to improve cash flow.",
+                
+                "srv-for-title": "Foreign Office Rep.",
+                "srv-for-short": "Local representation and compliance management for international entities in Finland.",
+                "srv-for-full": "Expanding into Finland? We act as your local representatives, handling statutory filings, compliance, banking relationships, and local administration. We bridge the cultural and regulatory gap, allowing you to focus on growing your core business operations in the Nordic region.",
+                
+                "srv-leg-title": "Financial Legal Advisor",
+                "srv-leg-short": "Expert legal counsel on corporate finance, mergers, and financial disputes.",
+                "srv-leg-full": "Our legal advisory team specializes in the intersection of finance and law. We provide counsel on M&A transactions, corporate restructuring, contract negotiation, compliance with Finnish financial regulations (FSA), and resolving financial disputes with robust legal frameworks.",
+                
+                "srv-acc-title": "Accounting Services",
+                "srv-acc-short": "Precise bookkeeping, payroll, and financial reporting tailored to your business needs.",
+                "srv-acc-full": "We offer fully digitized, modern accounting solutions. From daily bookkeeping and payroll management to complex consolidated financial statements (FAS/IFRS). Our transparent reporting gives you real-time insights into your financial health, empowering informed decision-making.",
+                
+                "srv-exp-title": "Export and Import",
+                "srv-exp-short": "Financial structuring and risk mitigation for international trade operations.",
+                "srv-exp-full": "Global trade involves currency risks, complex tariffs, and specific financing needs. We assist with trade finance structuring, letters of credit, hedging strategies against currency fluctuations, and optimizing the financial supply chain for your import/export operations.",
+
+                "company-title": "About FinVest",
+                "company-desc-1": "At FinVest, we redefine financial structuring. We believe in providing clear, actionable, and sustainable financial pathways for corporations operating within and outside Finland.",
+                "company-desc-2": "With over a decade of excellence in the Finnish market, our team of seasoned professionals combines global insights with deep local expertise. We partner with you to navigate financial complexities, mitigate risks, and unlock new avenues for capital efficiency.",
+                "comp-stat-1": "Years Experience",
+                "comp-stat-2": "Corporate Clients",
+                
+                "customers-title": "Trusted by Industry Leaders",
+                
+                "contact-title": "Get in Touch",
+                "contact-sub": "Let's discuss how we can elevate your financial strategy.",
+                "contact-hq": "Headquarters",
+                "contact-response": "Avg. Response Time",
+                "contact-hours": "Under 2 hours",
+                "contact-send": "Send Message",
+                "contact-success": "Message sent successfully! We will contact you soon.",
+                
+                "footer-desc": "Providing premier financial services, advisory, and consulting for businesses looking to scale securely.",
+                "footer-links-title": "Quick Links",
+                "footer-contact-title": "Contact",
+                "footer-quote": "Request a Quote",
+                "footer-rights": "© 2026 FinVest. All rights reserved.",
+                "footer-privacy": "Privacy Policy",
+                "footer-terms": "Terms of Service",
+                
+                "modal-cta": "Inquire About This Service"
+            },
+            fi: {
+                "company-name": "FinVest",
+                "company-slogan": "Turvaa Huomisesi",
+                "nav-services": "Palvelut",
+                "nav-company": "Yritys",
+                "nav-contact": "Yhteystiedot",
+                "nav-quote": "Pyydä Tarjous",
+                "theme-text": "Ulkoasu",
+                "lang-text": "Kieli",
+                
+                "hero-1-title": "Yritysrahoitus",
+                "hero-1-sub": "Nostamme talousstrategiasi uusiin korkeuksiin.",
+                "hero-2-title": "Strateginen Konsultointi",
+                "hero-2-sub": "Asiantuntevaa ohjausta monimutkaisissa markkinaympäristöissä.",
+                "hero-3-title": "Globaali Kasvu",
+                "hero-3-sub": "Laajenna toimintaasi luottavaisin mielin.",
+                
+                "target-slogan": "Tarjoamme Suomen hienoimpia ja ammattimaisimpia palveluita.",
+                
+                "services-title": "Palvelumme",
+                "services-sub": "Kattavat talousratkaisut, jotka on räätälöity yrityksen huippuosaamiseen.",
+                "learn-more": "Lue lisää",
+                
+                "srv-cfo-title": "Talousjohtajapalvelut",
+                "srv-cfo-short": "Strateginen talousjohto yrityksesi pääomarakenteen ja kannattavuuden optimoimiseksi.",
+                "srv-cfo-full": "Osa-aikaiset ja väliaikaiset CFO-palvelumme tarjoavat johtotason talousosaamista ilman kokoaikaista sitoutumista. Autamme velan strukturoinnissa, oman pääoman hallinnassa, kannattavuuden parantamisessa ja talousstrategioiden yhteensovittamisessa liiketoimintatavoitteidesi kanssa kestävän kasvun varmistamiseksi.",
+                
+                "srv-tax-title": "Verokonsultointi",
+                "srv-tax-short": "Navigoi monimutkaisissa verosäännöksissä ja minimoi vastuut laillisesti ja tehokkaasti.",
+                "srv-tax-full": "Verotus Suomessa ja kansainvälisesti vaatii tarkkuutta. Asiantuntijamme tarjoavat kattavaa verosuunnittelua, yhteisöverotuksen vaatimustenmukaisuutta, alv-konsultointia ja edustusta verotarkastuksissa. Varmistamme, että yrityksesi noudattaa sääntöjä optimoiden samalla verotusasemasi kassavirran parantamiseksi.",
+                
+                "srv-for-title": "Ulkomainen Edustaja",
+                "srv-for-short": "Paikallinen edustus ja vaatimustenmukaisuuden hallinta kansainvälisille yhteisöille Suomessa.",
+                "srv-for-full": "Laajentumassa Suomeen? Toimimme paikallisena edustajanasi hoitaen lakisääteiset ilmoitukset, vaatimustenmukaisuuden, pankkisuhteet ja paikallishallinnon. Silloitamme kulttuurisen ja sääntelyyn liittyvän kuilun, jolloin voit keskittyä ydinliiketoimintasi kasvattamiseen Pohjoismaissa.",
+                
+                "srv-leg-title": "Talousoikeudellinen Neuvonantaja",
+                "srv-leg-short": "Asiantunteva oikeudellinen neuvonta yritysrahoituksessa, fuusioissa ja talousriidoissa.",
+                "srv-leg-full": "Oikeudellinen neuvonantajatiimimme on erikoistunut rahoituksen ja juridiikan risteykseen. Tarjoamme neuvontaa M&A-transaktioissa, yritysjärjestelyissä, sopimusneuvotteluissa, Suomen finanssisääntelyn (FIVA) noudattamisessa ja talousriitojen ratkaisemisessa vankkojen oikeudellisten puitteiden avulla.",
+                
+                "srv-acc-title": "Tilitoimistopalvelut",
+                "srv-acc-short": "Tarkka kirjanpito, palkanlaskenta ja talousraportointi yrityksesi tarpeisiin räätälöitynä.",
+                "srv-acc-full": "Tarjoamme täysin digitalisoituja, moderneja kirjanpitoratkaisuja. Päivittäisestä kirjanpidosta ja palkanlaskennasta monimutkaisiin konsernitilinpäätöksiin (FAS/IFRS). Läpinäkyvä raportointimme antaa sinulle reaaliaikaisen katsauksen taloudelliseen terveyteesi, mikä mahdollistaa tietoon perustuvan päätöksenteon.",
+                
+                "srv-exp-title": "Vienti ja Tuonti",
+                "srv-exp-short": "Taloudellinen strukturointi ja riskien vähentäminen kansainvälisen kaupan operaatioissa.",
+                "srv-exp-full": "Maailmankauppaan liittyy valuuttariskejä, monimutkaisia tullitariffeja ja erityisiä rahoitustarpeita. Autamme kaupan rahoituksen strukturoinnissa, remburssien käsittelyssä, valuuttakurssivaihteluiden suojausstrategioissa ja rahoitusketjun optimoinnissa tuonti-/vientitoiminnoillesi.",
+
+                "company-title": "Tietoa FinVestistä",
+                "company-desc-1": "FinVestillä määrittelemme taloudellisen strukturoinnin uudelleen. Uskomme selkeiden, toteutettavissa olevien ja kestävien taloudellisten polkujen tarjoamiseen yrityksille, jotka toimivat Suomessa ja sen ulkopuolella.",
+                "company-desc-2": "Yli vuosikymmenen kokemuksella Suomen markkinoilla asiantuntijatiimimme yhdistää globaalit näkemykset syvään paikalliseen asiantuntemukseen. Kumppanoimme kanssasi navigoidaksemme taloudellisissa monimutkaisuuksissa, vähentääksemme riskejä ja avataksemme uusia väyliä pääoman tehokkuudelle.",
+                "comp-stat-1": "Vuoden Kokemus",
+                "comp-stat-2": "Yritysasiakasta",
+                
+                "customers-title": "Alan Johtajien Luottama",
+                
+                "contact-title": "Ota Yhteyttä",
+                "contact-sub": "Keskustellaan siitä, miten voimme nostaa talousstrategiaasi.",
+                "contact-hq": "Pääkonttori",
+                "contact-response": "Keskim. Vastausaika",
+                "contact-hours": "Alle 2 tuntia",
+                "contact-send": "Lähetä Viesti",
+                "contact-success": "Viesti lähetetty onnistuneesti! Otamme sinuun yhteyttä pian.",
+                
+                "footer-desc": "Tarjoamme ensiluokkaisia rahoituspalveluita, neuvontaa ja konsultointia yrityksille, jotka haluavat skaalautua turvallisesti.",
+                "footer-links-title": "Pikalinkit",
+                "footer-contact-title": "Yhteystiedot",
+                "footer-quote": "Pyydä Tarjous",
+                "footer-rights": "© 2026 FinVest. Kaikki oikeudet pidätetään.",
+                "footer-privacy": "Tietosuojaseloste",
+                "footer-terms": "Käyttöehdot",
+                
+                "modal-cta": "Kysy Lisää Tästä Palvelusta"
+            }
+        };
+
+        const modalImages = {
+            'cfo': 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=1200&auto=format&fit=crop',
+            'tax': 'https://images.unsplash.com/photo-1586486855514-8c633cc15392?q=80&w=1200&auto=format&fit=crop',
+            'foreign': 'https://images.unsplash.com/photo-1521791136064-7986c2920216?q=80&w=1200&auto=format&fit=crop',
+            'legal': 'https://images.unsplash.com/photo-1589829085413-56de8ae18c73?q=80&w=1200&auto=format&fit=crop',
+            'accounting': 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=1200&auto=format&fit=crop',
+            'export': 'https://images.unsplash.com/photo-1578575437130-527eed3abbec?q=80&w=1200&auto=format&fit=crop'
+        };
+
+        function init() {
+            // Check system preference for theme
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                // Keep default light as requested, but if user explicitly wants dark, we could switch.
+                // Request specified "default light mode", so we enforce light on first load regardless unless saved.
+            }
+            
+            // Set initial placeholders
+            updatePlaceholders();
+            
+            // Start Hero Carousel
+            slideInterval = setInterval(() => nextSlide(), 5000);
+            
+            // Setup Mobile Menu Toggle
+            document.getElementById('mobile-menu-btn').addEventListener('click', function() {
+                const menu = document.getElementById('mobile-menu');
+                menu.classList.toggle('hidden');
+            });
+        }
+
+        function updateLanguage() {
+            const elements = document.querySelectorAll('[data-i18n]');
+            elements.forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (dictionary[currentLang][key]) {
+                    if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+                        // Placeholders are handled separately to avoid overriding inputted text
+                    } else {
+                        el.innerHTML = dictionary[currentLang][key];
+                    }
+                }
+            });
+            updatePlaceholders();
+        }
+
+        function updatePlaceholders() {
+            document.getElementById('form-name').placeholder = currentLang === 'en' ? 'Full Name *' : 'Koko Nimi *';
+            document.getElementById('form-phone').placeholder = currentLang === 'en' ? 'Phone Number *' : 'Puhelinnumero *';
+            document.getElementById('form-email').placeholder = currentLang === 'en' ? 'Email Address *' : 'Sähköpostiosoite *';
+            document.getElementById('form-company').placeholder = currentLang === 'en' ? 'Company Name *' : 'Yrityksen Nimi *';
+            document.getElementById('form-desc').placeholder = currentLang === 'en' ? 'How can we help you?' : 'Kuinka voimme auttaa?';
+        }
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'en' ? 'fi' : 'en';
+            
+            // Desktop toggle
+            const toggle = document.getElementById('lang-toggle');
+            const icon = document.getElementById('lang-icon-active');
+            
+            // Mobile toggle
+            const toggleMob = document.getElementById('lang-toggle-mobile');
+            const iconMob = document.getElementById('lang-icon-active-mobile');
+
+            if (currentLang === 'fi') {
+                toggle.classList.add('active');
+                icon.textContent = '🇫🇮';
+                toggleMob.classList.add('active');
+                iconMob.textContent = '🇫🇮';
+            } else {
+                toggle.classList.remove('active');
+                icon.textContent = '🇬🇧';
+                toggleMob.classList.remove('active');
+                iconMob.textContent = '🇬🇧';
+            }
+            updateLanguage();
+        }
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            
+            // Toggles
+            const toggle = document.getElementById('theme-toggle');
+            const icon = document.getElementById('theme-icon-active');
+            const toggleMob = document.getElementById('theme-toggle-mobile');
+            const iconMob = document.getElementById('theme-icon-active-mobile');
+
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                currentTheme = 'light';
+                
+                toggle.classList.remove('active');
+                icon.className = "fa-solid fa-sun text-yellow-500 text-xs";
+                toggleMob.classList.remove('active');
+                iconMob.className = "fa-solid fa-sun text-yellow-500 text-xs";
+            } else {
+                html.classList.add('dark');
+                currentTheme = 'dark';
+                
+                toggle.classList.add('active');
+                icon.className = "fa-solid fa-moon text-indigo-500 text-xs";
+                toggleMob.classList.add('active');
+                iconMob.className = "fa-solid fa-moon text-indigo-500 text-xs";
+            }
+        }
+
+        function goToSlide(index) {
+            clearInterval(slideInterval);
+            
+            document.querySelectorAll('.hero-slide').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.indicator').forEach(i => i.classList.remove('active', 'bg-white'));
+            document.querySelectorAll('.indicator').forEach(i => i.classList.add('bg-white/50'));
+            
+            document.getElementById(`slide-${index}`).classList.add('active');
+            const indicators = document.querySelectorAll('.indicator');
+            indicators[index].classList.remove('bg-white/50');
+            indicators[index].classList.add('bg-white', 'active');
+            
+            currentSlide = index;
+            slideInterval = setInterval(() => nextSlide(), 5000);
+        }
+
+        function nextSlide() {
+            let next = (currentSlide + 1) % 3;
+            goToSlide(next);
+        }
+
+        function openModal(serviceKey) {
+            const modal = document.getElementById('service-modal');
+            const content = document.getElementById('modal-content');
+            
+            // Map keys
+            let titleKey, descKey;
+            switch(serviceKey) {
+                case 'cfo': titleKey = 'srv-cfo-title'; descKey = 'srv-cfo-full'; break;
+                case 'tax': titleKey = 'srv-tax-title'; descKey = 'srv-tax-full'; break;
+                case 'foreign': titleKey = 'srv-for-title'; descKey = 'srv-for-full'; break;
+                case 'legal': titleKey = 'srv-leg-title'; descKey = 'srv-leg-full'; break;
+                case 'accounting': titleKey = 'srv-acc-title'; descKey = 'srv-acc-full'; break;
+                case 'export': titleKey = 'srv-exp-title'; descKey = 'srv-exp-full'; break;
+            }
+
+            document.getElementById('modal-title').textContent = dictionary[currentLang][titleKey];
+            document.getElementById('modal-desc').textContent = dictionary[currentLang][descKey];
+            document.getElementById('modal-img').src = modalImages[serviceKey];
+            
+            // Show modal with animation
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            // Trigger reflow
+            void modal.offsetWidth;
+            content.classList.remove('scale-95', 'opacity-0');
+            content.classList.add('scale-100', 'opacity-100');
+            
+            // Prevent body scroll
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('service-modal');
+            const content = document.getElementById('modal-content');
+            
+            content.classList.remove('scale-100', 'opacity-100');
+            content.classList.add('scale-95', 'opacity-0');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                document.body.style.overflow = '';
+            }, 300); // match transition duration
+        }
+
+        function closeMobileMenu() {
+            document.getElementById('mobile-menu').classList.add('hidden');
+        }
+
+        function handleForm(e) {
+            e.preventDefault();
+            // Simulate form submission
+            const btn = e.target.querySelector('button[type="submit"]');
+            const originalText = btn.innerHTML;
+            
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                document.getElementById('form-success').classList.remove('hidden');
+                e.target.reset();
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                
+                // Hide message after 5 seconds
+                setTimeout(() => {
+                    document.getElementById('form-success').classList.add('hidden');
+                }, 5000);
+            }, 1000);
+        }
+
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

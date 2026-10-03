@@ -1,0 +1,77 @@
+Project: Web Site for a company providing financial services
+Type: Single page website
+Compatibility: (mobile first design)
+    - Computer
+    - Tablet
+    - Mobile 
+Multi Language: show along with country flag
+    - default (en)
+    - finnish
+    - this can be a very creative toggle button: English flag in one side and finnish flag in another side
+    - when english website is loaded it should show british flag and vice versa
+    - web site visitor should understand there is a finnish flag as well so that he/she can toggle between specific language
+Page Sections:
+    - fixed header (text will change based on the language selected)
+        - logo on the left
+        - beside logo the company name <finance-company> and slogan at the bottom of company name
+        - menu (upon click jump into different section of the page- product, comapany, contact)            
+        - language preferences on the right
+        - a button (contact for quote): this will jump to contact section
+        - dark / white toggle button (invent the place yourself). this button will toggle the theme between dark theme and white theme
+            - be very creative about this toggle button.
+            - web site visitor should know it has a dark and ligth mode
+            - default light mode but visitor should know there is a dark more as well
+    - heroshot: 3 different banners with text overlay (text will change based on the language selected) # need proper placeholder
+    - our target: (text will change based on the language selected)
+        - a narrow section with slogan or few texts
+        - slogan or text like: deliver finest and professional services in finland
+        - the idea is to create contrast between hero shot and products as both carries images
+    - our services (text will change based on the language selected)
+        - 2 (row) X 3 (columns) sections and each column has each financial products # need proper placeholder        
+        - when language is changed then product language will be changed along with short description
+        - a product pop up just to showcase product name, details descrption
+        - each product should have a image placeholder
+        - potential financial servies- 
+            - CFO services
+            - Tax consultant
+            - Foreign office representative
+            - Financial legal advisor
+            - Accounting services
+            - Export and Import
+    - company (text will change based on the language selected)
+        - a short description about our company: fill with lorem ipsum
+        - a image place holder to showcase a polished financial corporate office
+    - our customers (text will change based on the language selected)
+        - narrow sections
+        - few logos from out customers
+        - at least six of them from each product section 
+        - rolling feature from right to left
+    - contact (text will change based on the language selected)
+        - 1 (row) X 2 (columns) sections 
+        - left column has some interesting things (invent yourself)
+            - map
+                - this should be a proper map address connected to google map
+                - [Leppävaarankatu 3-9, 02600 Espoo](https://maps.app.goo.gl/3wiprqdpAYirv7RA6)
+            - our current addess
+                - Leppävaarankatu 3-9, 02600 Espoo
+            - phone
+            - email: info@<finance-company>.com
+        - right side with form
+            - form contains input for name*, phone*, email*, company name*, free text area for description and send button
+    - footer (text will change based on the language selected)
+        - left company information
+        - middle menu and links operating just like top menu
+        - right contact info along with quote button
+    - end ribbon (text will change based on the language selected)
+        - all rights reserved text
+Build: 
+    - the website has to look stunning and absolute professional
+    - client should have a wow effect
+    - easy language management as the website will have both english and finnish
+    - each and every content of the page should be variable and should change when the language is changed including company slogan
+    - don't put so many text on contact us section. 
+    - keep the website clean and simple (i.e. take apple.com as a reference)
+Content:
+    - you can try to put proper images
+    - you can try to put proper content but as I said those should be editable from proper object or place
+
