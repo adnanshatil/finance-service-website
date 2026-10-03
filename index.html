@@ -986,10 +986,13 @@
         function init() {
             // Setup Theme from system/storage
             const html = document.documentElement;
-            if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            const savedTheme = localStorage.getItem('theme');
+
+            if (savedTheme === 'dark') {
                 html.classList.add('dark');
                 updateThemeUI(true);
             } else {
+                // Defaults to light theme (even if user's OS is in dark mode)
                 html.classList.remove('dark');
                 updateThemeUI(false);
             }
@@ -1015,7 +1018,7 @@
             updateDocTitle();
         }
 
-        // Toggles
+        // Toggle Function
         function toggleTheme() {
             const html = document.documentElement;
             const isDark = html.classList.toggle('dark');
@@ -1029,16 +1032,16 @@
             const togD = document.getElementById('theme-toggle');
             const togM = document.getElementById('theme-toggle-mob');
             
-            if(isDark) {
-                iconD.className = "fa-solid fa-moon text-primary text-xs";
-                iconM.className = "fa-solid fa-moon text-primary text-xs";
-                togD.classList.add('toggled');
-                togM.classList.add('toggled');
+            if (isDark) {
+                if (iconD) iconD.className = "fa-solid fa-moon text-primary text-xs";
+                if (iconM) iconM.className = "fa-solid fa-moon text-primary text-xs";
+                if (togD) togD.classList.add('toggled');
+                if (togM) togM.classList.add('toggled');
             } else {
-                iconD.className = "fa-solid fa-sun text-primary text-xs";
-                iconM.className = "fa-solid fa-sun text-primary text-xs";
-                togD.classList.remove('toggled');
-                togM.classList.remove('toggled');
+                if (iconD) iconD.className = "fa-solid fa-sun text-primary text-xs";
+                if (iconM) iconM.className = "fa-solid fa-sun text-primary text-xs";
+                if (togD) togD.classList.remove('toggled');
+                if (togM) togM.classList.remove('toggled');
             }
         }
 
